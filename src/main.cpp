@@ -53,7 +53,10 @@ extern "C"
 
 void app_main(void)
 {
-    printf("Hello world!\n");
+    Serial.begin(115200);
+    delay(3000);
+    printf("\n");
+    printf("Running\n");
 
     /* Print chip information */
     esp_chip_info_t chip_info;
@@ -62,19 +65,19 @@ void app_main(void)
            CONFIG_IDF_TARGET,
            chip_info.cores,
            (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "",
-           (chip_info.features & CHIP_FEATURE_BLE) ? "/BLE" : "");
+           (chip_info.features & CHIP_FEATURE_BLE) ? "/BLE" : "\n");
 
-    printf("silicon revision %d, ", chip_info.revision);
+    printf("silicon revision %d, \n", chip_info.revision);
 
     printf("%dMB %s flash\n", spi_flash_get_chip_size() / (1024 * 1024),
            (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
     printf("Minimum free heap size: %d bytes\n", esp_get_minimum_free_heap_size());
 
-    printf("MOSI is %d", MOSI);
-    printf("MOSI is %d", MISO);
-    printf("MOSI is %d", SS);
-    printf("MOSI is %d", SCK);
+    printf("MOSI is %d\n", MOSI);
+    printf("MOSI is %d\n", MISO);
+    printf("MOSI is %d\n", SS);
+    printf("MOSI is %d\n", SCK);
 
     gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
 
@@ -90,9 +93,17 @@ void app_main(void)
         printf("Failed to create task");
     }
 
+    String serial_input = "";
+
     while (1) {
         if (myDisplay.displayAnimate()) {
             myDisplay.displayReset();
+        }
+
+        while (Serial.available() > 0) {
+            serial_input = Serial.readStringUntil('\n');
+            myDisplay.displayClear();
+            myDisplay.displayText(serial_input.c_str(), PA_CENTER, 100, 0, PA_SCROLL_LEFT, PA_SCROLL_LEFT);
         }
 
         vTaskDelay(10 / portTICK_PERIOD_MS);
