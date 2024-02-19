@@ -61,7 +61,7 @@ void app_main(void)
     /* Print chip information */
     esp_chip_info_t chip_info;
     esp_chip_info(&chip_info);
-    printf("This is %s chip with %d CPU core(s), WiFi%s%s, ",
+    printf("This is a %s chip with %d CPU core(s), WiFi%s%s, ",
            CONFIG_IDF_TARGET,
            chip_info.cores,
            (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "",
@@ -75,13 +75,13 @@ void app_main(void)
     printf("Minimum free heap size: %d bytes\n", esp_get_minimum_free_heap_size());
 
     printf("MOSI is %d\n", MOSI);
-    printf("MOSI is %d\n", MISO);
-    printf("MOSI is %d\n", SS);
-    printf("MOSI is %d\n", SCK);
+    printf("MISO is %d\n", MISO);
+    printf("SS is %d\n", SS);
+    printf("SCK is %d\n", SCK);
 
     gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
 
-    // Intialize the object:
+    // Initialize the object:
     myDisplay.begin();
     // Set the intensity (brightness) of the display (0-15):
     myDisplay.setIntensity(0);
